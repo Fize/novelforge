@@ -27,6 +27,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install pyyaml
+
       - name: Verify Version 1.0.0
         run: |
           python3 -c "
@@ -70,6 +75,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install pyyaml
+
       - name: Build Distribution Archive
         run: |
           python3 scripts/package_skill.py
@@ -77,10 +87,10 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
         with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
           files: dist/novelforge-*.zip
-          name: NovelForge ${{ github.ref_name }}
+          name: NovelForge ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
           draft: false
           prerelease: false
           generate_release_notes: true
