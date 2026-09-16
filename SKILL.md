@@ -4,6 +4,7 @@ description: "通用小说创作与叙事引擎系统。面向短篇、中篇与
 metadata:
   openclaw:
     emoji: "🖋️"
+    version: "1.0.0"
     requires:
       bins: ["python3", "git"]
 ---

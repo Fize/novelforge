@@ -13,6 +13,7 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 if str(SKILL_ROOT) not in sys.path:
     sys.path.insert(0, str(SKILL_ROOT))
 
+from novelforge_engine import __version__
 from novelforge_engine.blueprint import validate_blueprint
 from novelforge_engine.context import build_context
 from novelforge_engine.distill import build_distill_from_spec, distill_engine, prepare_distill
@@ -78,6 +79,7 @@ def _engine_install(project, source):
 
 def build_parser():
     parser = argparse.ArgumentParser(prog="novelforgectl")
+    parser.add_argument("--version", "-V", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command")
     skill = sub.add_parser("skill-audit")
     skill.add_argument("--root", default=str(SKILL_ROOT))

@@ -1,0 +1,86 @@
+name: CI & Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Test & Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify Version 1.0.0
+        run: |
+          python3 -c "
+          import re
+          from pathlib import Path
+          from novelforge_engine import __version__
+
+          assert __version__ == '1.0.0', f'Engine version mismatch: {__version__}'
+
+          skill_text = Path('SKILL.md').read_text(encoding='utf-8')
+          m = re.search(r'version:\s*[\"\'\']?([^\"\'\'\n]+)', skill_text)
+          assert m, 'Version field not found in SKILL.md'
+          assert m.group(1).strip() == '1.0.0', f'SKILL.md version mismatch: {m.group(1)}'
+
+          print('All version checks passed: 1.0.0')
+          "
+          output=$(python3 scripts/novelforgectl.py --version)
+          echo "CLI version: $output"
+          test "$output" = "novelforgectl 1.0.0"
+
+      - name: Run Skill Audit
+        run: python3 scripts/novelforgectl.py skill-audit
+
+      - name: Run Unit Tests
+        run: python3 -m unittest discover -s tests
+
+      - name: Run Evals
+        run: python3 evals/run_evals.py
+
+  release:
+    name: Package & Release
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build Distribution Archive
+        run: |
+          python3 scripts/package_skill.py
+          ls -lh dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: dist/novelforge-*.zip
+          name: NovelForge ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
