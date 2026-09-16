@@ -108,7 +108,7 @@ Core 只验证结构；题材规则必须来自项目画像或显式 genre pack�
 
 `context build` 根据蓝图 ID 读取人物、地点、物品、关系、事件和伏笔文件，生成
 带正文哈希、依赖哈希和 Engine Snapshot 的 Context Ticket。只读取显式依赖和
-允许的一跳关系；不使用 RAG、BM25、向量或相似度搜索。
+允许的一跳关系；严格按显式声明的依赖精准编译上下文。
 
 ## 4. Draft and review
 

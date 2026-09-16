@@ -33,9 +33,8 @@ processing. There is no duplicate projection.
 ## Context rules
 
 Chapter blueprints must declare dependency IDs. `novelforgectl context build` loads
-only those IDs and their explicitly allowed relationship edges. It does not
-perform similarity search, corpus ranking, RAG, BM25, vector search, or hidden
-full-text recall.
+only those IDs and their explicitly allowed relationship edges deterministically,
+avoiding probabilistic or fuzzy retrieval.
 
 Every context ticket records the blueprint hash, dependency hashes, selected
 engine card IDs, and a deterministic payload. A changed input invalidates the

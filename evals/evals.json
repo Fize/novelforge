@@ -14,11 +14,11 @@
     },
     {
       "id": 2,
-      "prompt": "上一章结算后，角色关系和一个未解决问题发生变化。请说明如何在不使用 RAG 或 BM25 的情况下，让下一章只读取必要的长期记忆。",
+      "prompt": "上一章结算后，角色关系和一个未解决问题发生变化。请说明系统如何基于显式依赖与哈希工单，让下一章精准读取必要的长期记忆。",
       "expected_output": "The response uses settlement facts, explicit dependency IDs, hashes, and a deterministic Context Ticket.",
       "files": [],
       "expectations": [
-        "The response explicitly rejects RAG, BM25, embeddings, and vector databases",
+        "The system accesses memory strictly through explicit dependency declarations instead of fuzzy retrieval",
         "Memory access is strictly bounded by explicit dependency IDs and SHA-256 hashes",
         "The context is compiled into an immutable, verifiable Context Ticket"
       ]

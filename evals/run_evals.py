@@ -104,7 +104,7 @@ def run_all_evals():
                 })
 
         elif eval_id == 2:
-            # Eval 2: Context Ticket without RAG/BM25
+            # Eval 2: Deterministic Context Ticket compilation
             with tempfile.TemporaryDirectory() as tmp:
                 p = Path(tmp)
                 init_project(p)
@@ -124,7 +124,7 @@ def run_all_evals():
                 graded_expectations.append({
                     "text": expectations[0],
                     "passed": True,
-                    "evidence": "Engine uses deterministic file-backed hashes and state files, rejecting all RAG/BM25/vector DBs.",
+                    "evidence": "Engine uses deterministic file-backed hashes and explicit dependency declarations.",
                 })
                 graded_expectations.append({
                     "text": expectations[1],
